@@ -218,33 +218,34 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
-   const addToCart = (item) => {
-  const existingItem = cart.find(
-    (cartItem) => cartItem.name === item[0]
-  )
-
-  if (existingItem) {
-    setCart(
-      cart.map((cartItem) =>
-        cartItem.name === item[0]
-          ? {
-              ...cartItem,
-              quantity: cartItem.quantity + 1,
-            }
-          : cartItem
-      )
+  const addToCart = (item) => {
+    const existingItem = cart.find(
+      (cartItem) => cartItem.name === item[0]
     )
-  } else {
-    setCart([
-      ...cart,
-      {
-        name: item[0],
-        price: item[1],
-        quantity: 1,
-      },
-    ])
+
+    if (existingItem) {
+      setCart(
+        cart.map((cartItem) =>
+          cartItem.name === item[0]
+            ? {
+                ...cartItem,
+                quantity: cartItem.quantity + 1,
+              }
+            : cartItem
+        )
+      )
+    } else {
+      setCart([
+        ...cart,
+        {
+          name: item[0],
+          price: item[1],
+          quantity: 1,
+        },
+      ])
+    }
   }
-}
+
   const increaseQuantity = (name) => {
     setCart(
       cart.map((item) =>
@@ -276,18 +277,20 @@ function App() {
   const removeItem = (name) => {
     setCart(cart.filter((item) => item.name !== name))
   }
-useEffect(() => {
-  if (cart.length > 0) {
-    setTimeout(() => {
-      document
-        .querySelector(".cart-box")
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        })
-    }, 100)
-  }
-}, [cart])
+
+  useEffect(() => {
+    if (cart.length > 0) {
+      setTimeout(() => {
+        document
+          .querySelector(".cart-box")
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          })
+      }, 100)
+    }
+  }, [cart])
+
   const total = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -378,7 +381,10 @@ useEffect(() => {
   return (
     <div className="app">
       <header className="navbar">
-        <div className="logo">CHAND</div>
+        <div className="logo">
+          CHAND RESTAURANT
+          <small>Khairpur Tamewali</small>
+        </div>
 
         <nav>
           <a href="#home">Home</a>
@@ -397,7 +403,10 @@ useEffect(() => {
 
       <main className="hero animate-on-scroll" id="home">
         <div className="hero-image">
-          <img src={restaurantImage} alt="Chand Restaurant" />
+          <img
+            src={restaurantImage}
+            alt="Chand Restaurant Khairpur Tamewali"
+          />
         </div>
 
         <div className="hero-content">
@@ -411,7 +420,7 @@ useEffect(() => {
 
           <p className="description">
             Experience the rich flavors, traditional recipes and warm
-            hospitality of Chand Restaurant.
+            hospitality of Chand Restaurant, Khairpur Tamewali.
           </p>
 
           <div className="hero-buttons">
@@ -426,6 +435,33 @@ useEffect(() => {
           </div>
         </div>
       </main>
+
+      <section className="about-section animate-on-scroll" id="about">
+        <div className="section-title">
+          <p>SINCE 2001 • OUR STORY</p>
+
+          <h2>
+            About <span>Chand Restaurant</span>
+          </h2>
+        </div>
+
+        <p className="about-text">
+          Since 2001, Chand Restaurant, Khairpur Tamewali has been serving
+          authentic taste, traditional flavors, and unforgettable dining
+          experiences.
+          <br />
+          <br />
+          From traditional desi flavors to carefully prepared dishes, every
+          meal is made with quality ingredients, rich taste, and genuine
+          passion. Whether you're enjoying a family dinner, dining with
+          friends, or simply craving something special, Chand Restaurant
+          brings you a warm atmosphere and unforgettable flavors.
+          <br />
+          <br />
+          Chand Restaurant — where great food is not just served, it's
+          experienced.
+        </p>
+      </section>
 
       <div
         ref={cartRef}
@@ -521,7 +557,7 @@ useEffect(() => {
 
       <section className="menu-section" id="menu">
         <div className="section-title">
-          <p>CHAND RESTAURANT MENU</p>
+          <p>CHAND RESTAURANT • KHAIRPUR TAMEWALI</p>
 
           <h2>
             Our <span>Menu</span>
