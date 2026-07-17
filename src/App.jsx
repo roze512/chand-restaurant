@@ -1,5 +1,6 @@
 import { useState } from "react"
 import "./App.css"
+import restaurantImage from "./assets/restaurant.jpg"
 
 const menuCategories = [
 {
@@ -202,16 +203,14 @@ const existingItem = cart.find(
 ```
 if (existingItem) {
   setCart(
-    cart.map((cartItem) => {
-      if (cartItem.name === item[0]) {
-        return {
-          ...cartItem,
-          quantity: cartItem.quantity + 1,
-        }
-      }
-
-      return cartItem
-    })
+    cart.map((cartItem) =>
+      cartItem.name === item[0]
+        ? {
+            ...cartItem,
+            quantity: cartItem.quantity + 1,
+          }
+        : cartItem
+    )
   )
 } else {
   setCart([
@@ -229,49 +228,40 @@ if (existingItem) {
 
 const increaseQuantity = (name) => {
 setCart(
-cart.map((item) => {
-if (item.name === name) {
-return {
+cart.map((item) =>
+item.name === name
+? {
 ...item,
 quantity: item.quantity + 1,
 }
-}
-
-```
-    return item
-  })
+: item
 )
-```
-
+)
 }
 
 const decreaseQuantity = (name) => {
 setCart(
 cart
-.map((item) => {
-if (item.name === name) {
-return {
+.map((item) =>
+item.name === name
+? {
 ...item,
 quantity: item.quantity - 1,
 }
-}
-
-```
-      return item
-    })
-    .filter((item) => item.quantity > 0)
+: item
 )
-```
-
+.filter((item) => item.quantity > 0)
+)
 }
 
 const removeItem = (name) => {
 setCart(cart.filter((item) => item.name !== name))
 }
 
-const total = cart.reduce((sum, item) => {
-return sum + item.price * item.quantity
-}, 0)
+const total = cart.reduce(
+(sum, item) => sum + item.price * item.quantity,
+0
+)
 
 const placeOrder = () => {
 if (cart.length === 0) {
@@ -280,7 +270,7 @@ return
 }
 
 ```
-if (customerName === "" || phone === "" || address === "") {
+if (!customerName || !phone || !address) {
   alert("Please fill all customer details")
   return
 }
@@ -288,8 +278,7 @@ if (customerName === "" || phone === "" || address === "") {
 let orderText = ""
 
 cart.forEach((item) => {
-  orderText =
-    orderText +
+  orderText +=
     item.name +
     " x " +
     item.quantity +
@@ -314,8 +303,7 @@ const message =
   "\n\n" +
   "ORDER:\n" +
   orderText +
-  "\n" +
-  "TOTAL: Rs. " +
+  "\nTOTAL: Rs. " +
   total
 
 const whatsappUrl =
@@ -329,11 +317,11 @@ window.location.href = whatsappUrl
 
 const bookTable = () => {
 if (
-bookingName === "" ||
-bookingPhone === "" ||
-bookingDate === "" ||
-bookingTime === "" ||
-guests === ""
+!bookingName ||
+!bookingPhone ||
+!bookingDate ||
+!bookingTime ||
+!guests
 ) {
 alert("Please fill all booking details")
 return
@@ -345,17 +333,13 @@ const message =
   "I want to book a table.\n\n" +
   "Name: " +
   bookingName +
-  "\n" +
-  "Phone: " +
+  "\nPhone: " +
   bookingPhone +
-  "\n" +
-  "Date: " +
+  "\nDate: " +
   bookingDate +
-  "\n" +
-  "Time: " +
+  "\nTime: " +
   bookingTime +
-  "\n" +
-  "Guests: " +
+  "\nGuests: " +
   guests
 
 const whatsappUrl =
@@ -387,10 +371,7 @@ return ( <div className="app"> <header className="navbar"> <div className="logo"
 
   <main className="hero" id="home">
     <div className="hero-image">
-      <img
-        src="/restaurant.jpg"
-        alt="Chand Restaurant"
-      />
+      <img src={restaurantImage} alt="Chand Restaurant" />
     </div>
 
     <div className="hero-content">
@@ -408,9 +389,7 @@ return ( <div className="app"> <header className="navbar"> <div className="logo"
       </p>
 
       <div className="hero-buttons">
-        <button className="primary-btn">
-          Explore Menu
-        </button>
+        <button className="primary-btn">Explore Menu</button>
 
         <button
           className="secondary-btn"
@@ -544,12 +523,11 @@ return ( <div className="app"> <header className="navbar"> <div className="logo"
 
     <div className="menu-list">
       {menuCategories
-        .filter((category) => {
-          return (
+        .filter(
+          (category) =>
             selectedCategory === "ALL" ||
             category.title.includes(selectedCategory)
-          )
-        })
+        )
         .map((category, index) => (
           <div className="menu-category" key={index}>
             <h3>{category.title}</h3>
