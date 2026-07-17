@@ -4,7 +4,6 @@
   --bg: #071a1a;
   --bg-soft: #0d2423;
   --card: rgba(18, 48, 46, 0.72);
-  --card-light: rgba(28, 67, 63, 0.45);
   --gold: #d6b36a;
   --gold-light: #f0d79b;
   --cream: #f5f0e6;
@@ -82,6 +81,7 @@ button {
   letter-spacing: 4px;
   font-family: "Playfair Display", serif;
   text-shadow: 0 0 25px rgba(214, 179, 106, 0.25);
+  animation: logoGlow 4s ease-in-out infinite;
 }
 
 .navbar nav {
@@ -93,7 +93,7 @@ button {
   color: var(--muted);
   text-decoration: none;
   font-size: 14px;
-  transition: 0.35s ease;
+  transition: all 0.35s ease;
 }
 
 .navbar nav a:hover {
@@ -150,14 +150,13 @@ button {
   animation: floatingGlow 7s ease-in-out infinite;
 }
 
-
 .hero-image {
   height: 480px;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 18px;
   position: relative;
-  animation: heroImage 1s ease forwards,
-    restaurantFloat 5s ease-in-out 1s infinite;
+  animation: heroImage 1s ease forwards;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
 }
 
 .hero-image::after {
@@ -169,14 +168,15 @@ button {
     transparent 45%,
     rgba(4, 19, 18, 0.72)
   );
+  pointer-events: none;
 }
 
 .hero-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.7s ease;
-  animation: restaurantFloat 4s ease-in-out infinite;
+  transition: transform 0.8s ease;
+  animation: restaurantFloat 5s ease-in-out infinite;
 }
 
 .hero-image:hover img {
@@ -289,6 +289,11 @@ button {
   align-items: center;
   padding: 18px 0;
   border-bottom: 1px solid rgba(214, 179, 106, 0.1);
+  transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+  padding-left: 8px;
 }
 
 .cart-item > span {
@@ -599,7 +604,8 @@ button {
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(35px);
-  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .animate-on-scroll.show {
@@ -609,11 +615,6 @@ button {
 
 /* KEYFRAMES */
 
- {
-  from {
-    opacity: 0;
-    transform: translateX(-45px);
-  }
 @keyframes heroImage {
   from {
     opacity: 0;
@@ -682,6 +683,31 @@ button {
 
   50% {
     transform: translate(-30px, 25px);
+  }
+}
+
+@keyframes restaurantFloat {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(214, 179, 106, 0.15);
+  }
+
+  50% {
+    text-shadow: 0 0 35px rgba(214, 179, 106, 0.35);
   }
 }
 
@@ -865,21 +891,5 @@ button {
 
   .navbar nav a {
     font-size: 11px;
-  }
-}
-.hero-image img {
-  animation: restaurantFloat 5s ease-in-out infinite;
-}
-@keyframes restaurantFloat {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-
-  100% {
-    transform: translateY(0);
   }
 }
