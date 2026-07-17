@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "./App.css"
 import restaurantImage from "./assets/restaurant.jpg"
 
@@ -125,6 +125,7 @@ const menuCategories = [
       ["Beef Karahi", 2200],
       ["Beef Handi", 2200],
       ["White Beef", 2400],
+      ["Beef Shanwari", 2300],
       ["Beef Masala", 600],
       ["Beef Qorma", 500],
       ["Beef Namkeen Dry", 1800],
@@ -183,6 +184,8 @@ function App() {
   const [cart, setCart] = useState([])
   const [showBooking, setShowBooking] = useState(false)
 
+  const cartRef = useRef(null)
+
   const [customerName, setCustomerName] = useState("")
   const [phone, setPhone] = useState("")
   const [orderType, setOrderType] = useState("Dine In")
@@ -215,34 +218,33 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
-  const addToCart = (item) => {
-    const existingItem = cart.find(
-      (cartItem) => cartItem.name === item[0]
-    )
+   const addToCart = (item) => {
+  const existingItem = cart.find(
+    (cartItem) => cartItem.name === item[0]
+  )
 
-    if (existingItem) {
-      setCart(
-        cart.map((cartItem) =>
-          cartItem.name === item[0]
-            ? {
-                ...cartItem,
-                quantity: cartItem.quantity + 1,
-              }
-            : cartItem
-        )
+  if (existingItem) {
+    setCart(
+      cart.map((cartItem) =>
+        cartItem.name === item[0]
+          ? {
+              ...cartItem,
+              quantity: cartItem.quantity + 1,
+            }
+          : cartItem
       )
-    } else {
-      setCart([
-        ...cart,
-        {
-          name: item[0],
-          price: item[1],
-          quantity: 1,
-        },
-      ])
-    }
+    )
+  } else {
+    setCart([
+      ...cart,
+      {
+        name: item[0],
+        price: item[1],
+        quantity: 1,
+      },
+    ])
   }
-
+}
   const increaseQuantity = (name) => {
     setCart(
       cart.map((item) =>
@@ -274,39 +276,22 @@ function App() {
   const removeItem = (name) => {
     setCart(cart.filter((item) => item.name !== name))
   }
-
+useEffect(() => {
+  if (cart.length > 0) {
+    setTimeout(() => {
+      document
+        .querySelector(".cart-box")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        })
+    }, 100)
+  }
+}, [cart])
   const total = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   )
-
-  const openWhatsApp = (message) => {
-    const encodedMessage = encodeURIComponent(message)
-
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(
-      navigator.userAgent
-    )
-
-    if (isMobile) {
-      const appUrl =
-        "whatsapp://send?phone=923017923405&text=" +
-        encodedMessage
-
-      const webUrl =
-        "https://wa.me/923017923405?text=" +
-        encodedMessage
-
-      window.location.href = appUrl
-
-      setTimeout(() => {
-        window.location.href = webUrl
-      }, 1500)
-    } else {
-      window.location.href =
-        "https://web.whatsapp.com/send?phone=923017923405&text=" +
-        encodedMessage
-    }
-  }
 
   const placeOrder = () => {
     if (cart.length === 0) {
@@ -350,7 +335,11 @@ function App() {
       "\nTOTAL: Rs. " +
       total
 
-    openWhatsApp(message)
+    const whatsappUrl =
+      "https://api.whatsapp.com/send?phone=923017923405&text=" +
+      encodeURIComponent(message)
+
+    window.location.href = whatsappUrl
   }
 
   const bookTable = () => {
@@ -379,7 +368,11 @@ function App() {
       "\nGuests: " +
       guests
 
-    openWhatsApp(message)
+    const whatsappUrl =
+      "https://api.whatsapp.com/send?phone=923017923405&text=" +
+      encodeURIComponent(message)
+
+    window.location.href = whatsappUrl
   }
 
   return (
@@ -434,7 +427,10 @@ function App() {
         </div>
       </main>
 
-      <div className="cart-box animate-on-scroll">
+      <div
+        ref={cartRef}
+        className="cart-box animate-on-scroll"
+      >
         <h2>Your Order</h2>
 
         {cart.length === 0 ? (
