@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import restaurantImage from "./assets/restaurant.jpg"
 
@@ -125,7 +125,6 @@ const menuCategories = [
       ["Beef Karahi", 2200],
       ["Beef Handi", 2200],
       ["White Beef", 2400],
-      ["Beef Shanwari", 2300],
       ["Beef Masala", 600],
       ["Beef Qorma", 500],
       ["Beef Namkeen Dry", 1800],
@@ -195,6 +194,27 @@ function App() {
   const [bookingTime, setBookingTime] = useState("")
   const [guests, setGuests] = useState("")
 
+  useEffect(() => {
+    const elements = document.querySelectorAll(".animate-on-scroll")
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show")
+          }
+        })
+      },
+      {
+        threshold: 0.15,
+      }
+    )
+
+    elements.forEach((element) => observer.observe(element))
+
+    return () => observer.disconnect()
+  }, [])
+
   const addToCart = (item) => {
     const existingItem = cart.find(
       (cartItem) => cartItem.name === item[0]
@@ -260,6 +280,34 @@ function App() {
     0
   )
 
+  const openWhatsApp = (message) => {
+    const encodedMessage = encodeURIComponent(message)
+
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(
+      navigator.userAgent
+    )
+
+    if (isMobile) {
+      const appUrl =
+        "whatsapp://send?phone=923017923405&text=" +
+        encodedMessage
+
+      const webUrl =
+        "https://wa.me/923017923405?text=" +
+        encodedMessage
+
+      window.location.href = appUrl
+
+      setTimeout(() => {
+        window.location.href = webUrl
+      }, 1500)
+    } else {
+      window.location.href =
+        "https://web.whatsapp.com/send?phone=923017923405&text=" +
+        encodedMessage
+    }
+  }
+
   const placeOrder = () => {
     if (cart.length === 0) {
       alert("Please add an item first")
@@ -302,11 +350,7 @@ function App() {
       "\nTOTAL: Rs. " +
       total
 
-    const whatsappUrl =
-      "https://web.whatsapp.com/send?phone=923017923405&text=" +
-      encodeURIComponent(message)
-
-    window.location.href = whatsappUrl
+    openWhatsApp(message)
   }
 
   const bookTable = () => {
@@ -335,11 +379,7 @@ function App() {
       "\nGuests: " +
       guests
 
-    const whatsappUrl =
-      "https://web.whatsapp.com/send?phone=923017923405&text=" +
-      encodeURIComponent(message)
-
-    window.location.href = whatsappUrl
+    openWhatsApp(message)
   }
 
   return (
@@ -362,7 +402,7 @@ function App() {
         </button>
       </header>
 
-      <main className="hero" id="home">
+      <main className="hero animate-on-scroll" id="home">
         <div className="hero-image">
           <img src={restaurantImage} alt="Chand Restaurant" />
         </div>
@@ -394,7 +434,7 @@ function App() {
         </div>
       </main>
 
-      <div className="cart-box">
+      <div className="cart-box animate-on-scroll">
         <h2>Your Order</h2>
 
         {cart.length === 0 ? (
